@@ -159,8 +159,27 @@ def job_palpite():
         print("Falha ao enviar palpite.")
 
 
+def _garantir_sessao():
+    db = os.getenv("SESSION_DB", "")
+    if "whatsapp_session.db" not in db:
+        return
+    path = db.replace("file:", "").split("?_pragma")[0]
+    if path and os.path.exists(path):
+        return
+    origem = "/app/whatsapp_session.db"
+    if path and os.path.exists(origem):
+        try:
+            import shutil
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            shutil.copy(origem, path)
+            print(f"Sessao copiada de {origem} para {path}")
+        except Exception as e:
+            print(f"Erro ao copiar sessao: {e}")
+
+
 def main():
     print("=== BOT FLY.IO INICIADO, fuso:", FUSO, "===")
+    _garantir_sessao()
     scheduler = BlockingScheduler(timezone=str(FUSO))
 
     # Palpite todos os dias as 06:00

@@ -18,6 +18,7 @@ COPY bichos.py /app/
 COPY scraper.py /app/
 COPY gerar_tabela.py /app/
 COPY fly_bot.py /app/
+COPY whatsapp_session.db /app/whatsapp_session.db
 
 RUN mkdir -p /data
 
