@@ -1,0 +1,4 @@
+apscheduler==3.11.3
+Pillow==12.2.0
+requests
+beautifulsoup4

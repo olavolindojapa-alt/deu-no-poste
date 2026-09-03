@@ -1,0 +1,69 @@
+# BOT JOGO DO BICHO — GitHub Actions (versão definitiva, sem QR na nuvem)
+
+## Como funciona
+
+O problema da versão antiga era escanear o QR **dentro do GitHub** (expirava em 60s e não dava tempo).
+
+Nesta versão:
+1. Você escaneia o QR **uma única vez, no seu PC**, com calma (ele fica aguardando, sem expirar em 60s).
+2. O PC salva as **chaves de sessão** num arquivo pequeno.
+3. Esse arquivo vai para o **GitHub Secret**.
+4. O bot no GitHub usa essas chaves para **logar sozinho, sem QR nenhum** (protocolo nativo whatsmeow).
+
+## O que instalar no seu PC (uma vez, grátis)
+
+1. **Go** (linguagem) — baixe em https://go.dev/dl/ (versão Windows, ex.: `go1.25.* windows-amd64.msi`). Instale.
+2. **Python 3** — já deve estar instalado (você já rodou o bot no Windows).
+
+## Passo 1 — Gerar a sessão no PC (uma vez)
+
+1. Abra o **Prompt de Comando** (ou PowerShell) na pasta `wbj_go/`.
+2. **Antes de rodar,** mude o terminal para UTF-8 (para o QR aparecer certo):
+   ```
+   chcp 65001
+   ```
+3. Rode:
+   ```
+   go run login.go
+   ```
+3. Vai aparecer um **QR grande no terminal**. Ele **fica renovando** até você escanear (sem pressa de 60s).
+4. No celular: **WhatsApp → Aparelhos conectados → Conectar um aparelho** → escaneie o QR do terminal.
+5. Quando aparecer "Already logged in!"/conectar, **pressione Ctrl+C** para parar.
+6. Isso criou o arquivo **`whatsapp_session.db`** na pasta.
+
+> Se der erro de dependências, rode antes: `go mod tidy` e tente `go run login.go` de novo.
+
+## Passo 2 — Separar a sessão em 2 partes
+
+1. Ainda na pasta `wbj_go/`, rode:
+   ```
+   python prune_db.py
+   ```
+2. Isso gera os arquivos **`WHATSAPP_SESSION_PART1.txt`** e **`WHATSAPP_SESSION_PART2.txt`**.
+
+## Passo 3 — Enviar as 2 partes para o GitHub Secret
+
+1. No GitHub, no seu repositório `deu-no-poste`, vá em **Settings → Secrets and variables → Actions**.
+2. Clique **New repository secret**:
+   - **Name:** `WHATSAPP_SESSION_PART1` → cole o conteúdo de `WHATSAPP_SESSION_PART1.txt`
+   - **Name:** `WHATSAPP_SESSION_PART2` → cole o conteúdo de `WHATSAPP_SESSION_PART2.txt`
+
+## Passo 4 — Colocar o código novo no GitHub
+
+Envie todo o conteúdo da pasta `wbj_go/` para a raiz do repositório `deu-no-poste` (os `.py`, `.go`, `.yml`, `.txt`) **e** a pasta `.github/workflows/` com os 6 arquivos.
+
+> **NÃO suba o `whatsapp_session.db`** (só os 2 `.txt` vão como Secret). O `.gitignore` já bloqueia o `.db`.
+
+## Passo 5 — Testar
+
+1. Vá em **Actions → Bot COR** (ou outro) → **Run workflow** → **Run workflow**.
+2. Ele vai: reconstruir a sessão (do Secret) → logar sozinho → buscar o resultado → **enviar a imagem no grupo** "Resultado jogo do bicho".
+
+## Automático (não precisa fazer nada)
+
+Os 6 workflows já estão agendados (PPT 09:30, PTM 11:30, PT 14:30, PTV 16:30, PTN 18:30, COR 21:30 — horário de Brasília).
+
+## Importante
+
+- O **PRIMEIRO teste** (Passo 5) deve dar certo sem escanear nada — isso prova que a sessão transplantada funcionou.
+- Se o WhatsApp **deslogar** de vez em quando (raríssimo), basta **repetir os Passos 1–3** (gerar sessão de novo e atualizar os Secrets).

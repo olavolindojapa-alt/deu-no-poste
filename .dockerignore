@@ -1,0 +1,15 @@
+# Seguranca: nunca subir secrets do GitHub ao deploy
+WHATSAPP_SESSION_PART1.txt
+WHATSAPP_SESSION_PART2.txt
+AGENTS.md
+whatsapp_session.db
+tabela.png
+*.exe
+*.png
+*.log
+logar_e_configurar.bat
+LEIA-ME.txt
+prune_db.py
+.git
+.gitignore
+fly.toml

@@ -1,0 +1,14 @@
+whatsapp_session.db
+WHATSAPP_SESSION_PART1.txt
+WHATSAPP_SESSION_PART2.txt
+__pycache__/
+*.pyc
+tabela.png
+rebuild_db.py
+login.log
+qr_login.png
+login.exe
+AGENTS.md
+phone_out.txt
+phone_err.txt
+login.pid

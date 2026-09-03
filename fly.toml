@@ -1,0 +1,20 @@
+app = "jogo-do-bicho-bot"
+
+[env]
+  BOT_FUSO = "America/Sao_Paulo"
+  GRUPO_NOME = "Resultado jogo do bicho"
+  SESSION_DB = "/data/whatsapp_session.db"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[processes]
+  app = "python -u fly_bot.py"
+
+[[mounts]]
+  source = "bot_data"
+  destination = "/data"
+
+[checks]
+  [checks.healthcheck]
+    grace_period = "60s"
